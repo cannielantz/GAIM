@@ -39,12 +39,12 @@ lowestNote = midi_convert.min # Index of lowest note
 highestNote = midi_convert.max
 noteRange = highestNote - lowestNote
 
-timesteps = 15
+timesteps = 20
 visible_size = 2 * noteRange * timesteps # Size of visible layer
 hidden_size = 50 # Size of hidden layer
 
-epochs = 200 # Number of training ephochs (through the entire dataset)
-batch_size = 100 # Number of training examples to send through the model at a time
+epochs = 500 # Number of training ephochs (through the entire dataset)
+batch_size = 55 # Number of training examples to send through the model at a time
 learning_rate = tf.constant(0.005, tf.float32)
 
 #####################################################################
@@ -63,14 +63,14 @@ visible_bias = tf.Variable(tf.zeros([1, visible_size], tf.float32, name = 'visib
 def random_binary_vec(probs):
     # Returns vector of random 0:s and 1:s from a probability vector
     # This is for both h and x
-    return tf.floor(probs + tf.random_uniform(tf.shape(probs), 0, 1))
+    return tf.floor(probs + tf.random_uniform( tf.shape(probs), 0, 1) )
 
 
 def gibbs_chain(k):
     def gibbs_step(count, k, xk):
 
-        hk = random_binary_vec(tf.sigmoid(tf.matmul(xk, w) + hidden_bias))
-        xk = random_binary_vec(tf.sigmoid(tf.matmul(hk, tf.transpose(w)) + visible_bias))
+        hk = random_binary_vec(tf.sigmoid( tf.matmul(xk, w) + hidden_bias) )
+        xk = random_binary_vec(tf.sigmoid( tf.matmul(hk, tf.transpose(w)) + visible_bias) )
 
         return count + 1, k, xk
 
@@ -116,18 +116,21 @@ with tf.Session() as sess:
                 train_x = song[i:i + batch_size]
                 sess.run(update, feed_dict={x: train_x})
 
-###########################################################################
 
-########################## Make music ####################################
+    ###########################################################################
 
-sample = gibbs_chain(1).eval(session = sess, feed_dict={x: np.zeros((10, visible_size))})
+    ########################## Make music ####################################
 
-for i in range(sample.shape[0]):
-    if not any(sample[i, :]):
-        continue
+    sample = gibbs_chain(1).eval( session=sess, feed_dict={ x: np.zeros((10, visible_size)) } )
+    done = tf.constant("Sampling")
+    print(sess.run(done))
 
-    S = np.reshape(sample[i, :], (timesteps, 2*noteRange))
-    midi_convert.matrix2midi(S, "generated/song_{}".format(i))
+    for i in range(sample.shape[0]):
+        if not any(sample[i, :]):
+            continue
+
+        S = np.reshape(sample[i, :], (timesteps, 2*noteRange))
+        midi_convert.matrix2midi(S, "generated/song_{}".format(i))
 
 
 

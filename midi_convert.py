@@ -75,7 +75,7 @@ def matrix2midi(statematrix, name='game_song', span=span):
 
     if not len(statematrix.shape) == 3:
         statematrix = np.dstack((statematrix[:, :span], statematrix[:, span:]))
-    pattern = midi.pattern()
+    pattern = midi.Pattern()
     track = midi.Track()
     pattern.append(track)
 
