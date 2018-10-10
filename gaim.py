@@ -43,7 +43,7 @@ timesteps = 20
 visible_size = 2 * noteRange * timesteps # Size of visible layer
 hidden_size = 50 # Size of hidden layer
 
-epochs = 500 # Number of training ephochs (through the entire dataset)
+epochs = 5 # Number of training ephochs (through the entire dataset)
 batch_size = 55 # Number of training examples to send through the model at a time
 learning_rate = tf.constant(0.005, tf.float32)
 
