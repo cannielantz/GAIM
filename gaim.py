@@ -13,9 +13,11 @@ import midi_convert
 #sess = tf.Session()
 #print(sess.run(hello))
 
+is_biggest = 0
 ###################### From midi to matrix ############################
 
 def get_songs(path):
+    #is_biggest = 0
     files = glob.glob('{}/*.mid*'.format(path)) #All midi-files in the folder
     songs = [] #An array to store the songs
     for f in tqdm(files):
@@ -23,12 +25,17 @@ def get_songs(path):
             song = np.array(midi_convert.midi2matrix(f)) #Convert each song to a note state matrix
             if np.array(song).shape[0] > 50:
                 songs.append(song)
+                if(len(song) > is_biggest):
+                    is_biggest = len(song)
+                print( "\n" + "File: " + f)
         except Exception as e:
             raise e
+        print("Longest song of size: {}".format(is_biggest))
     return songs
 
 songs = get_songs('midi-songs')
 print("{} songs processed".format(len(songs)))
+
 
 ######################################################################
 
@@ -43,9 +50,9 @@ timesteps = 20
 visible_size = 2 * noteRange * timesteps # Size of visible layer
 hidden_size = 50 # Size of hidden layer
 
-epochs = 5 # Number of training ephochs (through the entire dataset)
-batch_size = 55 # Number of training examples to send through the model at a time
-learning_rate = tf.constant(0.005, tf.float32)
+epochs = 200 # Number of training ephochs (through the entire dataset)
+batch_size = 100 # Number of training examples to send through the model at a time
+learning_rate = tf.constant(0.005, tf.float32) #0.005
 
 #####################################################################
 

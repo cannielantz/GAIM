@@ -15,6 +15,7 @@ def midi2matrix(midifile, squash=True, span=span):
     posns = [0 for track in pattern] #Positions
 
     stateMatrix = []
+    how_many = 0
     time = 0 #Start time
 
     state = [[0,0] for x in range(span)]
@@ -68,6 +69,15 @@ def midi2matrix(midifile, squash=True, span=span):
     S = np.array(stateMatrix)
     stateMatrix = np.hstack((S[:, :, 0], S[:, :, 1]))
     stateMatrix = np.asarray(stateMatrix).tolist()
+
+    how_many = np.count_nonzero(stateMatrix)
+
+    print(stateMatrix)
+    print(how_many)
+    print(len(stateMatrix))
+
+
+
     return stateMatrix
 
 def matrix2midi(statematrix, name='game_song', span=span):
