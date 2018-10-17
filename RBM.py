@@ -13,11 +13,11 @@ import midi_convert
 #sess = tf.Session()
 #print(sess.run(hello))
 
-is_biggest = 0
+
 ###################### From midi to matrix ############################
 
 def get_songs(path):
-    #is_biggest = 0
+    is_biggest = 0
     files = glob.glob('{}/*.mid*'.format(path)) #All midi-files in the folder
     songs = [] #An array to store the songs
     for f in tqdm(files):
@@ -33,7 +33,7 @@ def get_songs(path):
         print("Longest song of size: {}".format(is_biggest))
     return songs
 
-songs = get_songs('midi-songs')
+songs = get_songs('music/midi-songs')
 print("{} songs processed".format(len(songs)))
 
 
@@ -42,23 +42,19 @@ print("{} songs processed".format(len(songs)))
 
 ##################### Parameters #####################################
 
-lowestNote = midi_convert.min # Index of lowest note
-highestNote = midi_convert.max
-noteRange = highestNote - lowestNote
+
 
 timesteps = 20
-visible_size = 2 * noteRange * timesteps # Size of visible layer
-hidden_size = 50 # Size of hidden layer
 
 epochs = 200 # Number of training ephochs (through the entire dataset)
 batch_size = 100 # Number of training examples to send through the model at a time
-learning_rate = tf.constant(0.005, tf.float32) #0.005
+
 
 #####################################################################
 
 ####################### Variables ###################################
 
-x = tf.placeholder(tf.float32, [None, visible_size], name = 'x') # Our data
+
 w = tf.Variable(tf.random_normal([visible_size, hidden_size], 0.01), name = 'w') # Weight matrix
 hidden_bias = tf.Variable(tf.zeros([1, hidden_size], tf.float32, name = 'hidden_bias'))
 visible_bias = tf.Variable(tf.zeros([1, visible_size], tf.float32, name = 'visible_bias'))

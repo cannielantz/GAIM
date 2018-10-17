@@ -70,9 +70,9 @@ def midi2matrix(midifile, squash=True, span=span):
     stateMatrix = np.hstack((S[:, :, 0], S[:, :, 1]))
     stateMatrix = np.asarray(stateMatrix).tolist()
 
-    how_many = np.count_nonzero(stateMatrix)
+    #how_many = np.count_nonzero(stateMatrix)
 
-    print(stateMatrix)
+    #print(stateMatrix)
     print(how_many)
     print(len(stateMatrix))
 
