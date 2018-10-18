@@ -61,7 +61,7 @@ def rnnrbm():
         u_t = tf.tanh( bu + tf.matmul( x_out , Wvu) + tf.matmul( u_tm1, Wuu) )
 
         #Add the new output to the musical piece
-        music = tf.concat(0, [music, x_out])
+        music = tf.concat([music, x_out], 0)
 
         return count+1, k, u_t, x_out, x, music
 
@@ -92,7 +92,10 @@ def rnnrbm():
         music = tf.zeros([1, visible_size], tf.float32)
         loop_vars = [time_steps, iterations, U, u_t, x, music]
 
-        [_, _, _, _, _, music] = tf.while_loop(lambda count, num_iter, *args: count < num_iter, generate_recurrence, loop_vars)
+        [_, _, _, _, _, music] = tf.while_loop(lambda count, num_iter, *args: count < num_iter, generate_recurrence, loop_vars,
+                                               shape_invariants=[time_steps.get_shape(), iterations.get_shape(),
+                                                                 U.get_shape(), u_t.get_shape(),
+                                                                 x.get_shape(), tf.TensorShape([None, 780])])
 
 
         return music
