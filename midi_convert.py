@@ -2,10 +2,39 @@
 
 import midi
 import numpy as np
+import glob
+from tqdm import tqdm
 
 min = 24
 max = 102
 span = max-min
+timesteps = 5
+
+def write_song(path, song):
+    song = np.reshape(song, (song.shape[0]*timesteps, 2*span))
+    matrix2midi(song, name=path)
+
+def get_song(path):
+    song = np.array(midi2matrix(path))
+    long = np.floor(song.shape[0]/timesteps)*timesteps
+    song = song[:int(long)]
+
+    long2 = song.shape[0]/timesteps
+    long3 = song.shape[1]*timesteps
+    song = np.reshape(song, [int(long2), int(long3)])
+    return song
+
+def get_songs(path):
+    files = glob.glob('{}/*.mid*'.format(path))
+    songs = [] #An array to store the songs
+    for f in tqdm(files):
+        try:
+            song = get_song(f) #Convert each song to a note state matrix
+            if np.array(song).shape[0] > 50/timesteps:
+                songs.append(song)
+        except Exception as e:
+            print(f, e)
+    return songs
 
 #Convert midi file to note state matrix
 def midi2matrix(midifile, squash=True, span=span):
@@ -15,7 +44,6 @@ def midi2matrix(midifile, squash=True, span=span):
     posns = [0 for track in pattern] #Positions
 
     stateMatrix = []
-    how_many = 0
     time = 0 #Start time
 
     state = [[0,0] for x in range(span)]
@@ -69,14 +97,6 @@ def midi2matrix(midifile, squash=True, span=span):
     S = np.array(stateMatrix)
     stateMatrix = np.hstack((S[:, :, 0], S[:, :, 1]))
     stateMatrix = np.asarray(stateMatrix).tolist()
-
-    how_many = np.count_nonzero(stateMatrix)
-
-    print(stateMatrix)
-    print(how_many)
-    print(len(stateMatrix))
-
-
 
     return stateMatrix
 
