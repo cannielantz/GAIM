@@ -19,7 +19,7 @@ nn_output_songs = 3
 primer_song = 'trainingSamples/22.mid'
 
 def main( trained_weights ):
-    x, cost, generate, W, bh, bv, x, lr, Wuh, Wuv, Wvu, Wuu, bu, u0 = rnn_rbm.rnnrbm() #build and get parameters odf the network
+    x, cost, generate, W, bh, bv, x, lr, Wuh, Wuv, Wvu, Wuu, bu, u0 = rnn_rbm.rnnrbm() #build and get parameters of the network
 
     tvars = [W, Wuh, Wuv, Wvu, Wuu, bh, bv, bu, u0]
 

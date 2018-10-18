@@ -20,7 +20,7 @@ def main(epochs):
     gvs = [(tf.clip_by_value(grad, -10., 10.), var) for grad, var in gvs]
     update = opt_func.apply_gradients(gvs)
 
-    songs = midi_convert.get_songs('trainingSamples')
+    songs = midi_convert.get_songs('music/midi-songs')
 
     saver = tf.train.Saver(tvars)
     with tf.Session() as sess:
@@ -45,6 +45,6 @@ def main(epochs):
                 saver.save(sess, "parameter_checkpoints/epoch_{}.ckpt".format(epoch))
 
 if __name__ == "__main__":
-    main(50)
+    main(int(sys.argv[1]))
 
 

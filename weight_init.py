@@ -6,10 +6,10 @@ import rnn_rbm
 import midi_convert
 
 epochs = 100
-lr = 0.01
+lr = 0.0001
 
 def main():
-    songs = midi_convert.get_songs('trainingSamples')
+    songs = midi_convert.get_songs('music/midi-songs')
 
     x = tf.placeholder(tf.float32, [None, rnn_rbm.visible_size], name="x")  # The placeholder variable that holds our data
     W = tf.Variable(tf.random_normal([rnn_rbm.visible_size, rnn_rbm.hidden_size], 0.01), name="W")  # The weight matrix of the RBM

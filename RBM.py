@@ -75,7 +75,8 @@ def gibbs_chain(x, W, bv, bh, k):
         return count + 1, k, xk
 
     counter = tf.constant(0)
-    [_,_, x_sample] = control_flow_ops.while_loop(lambda count, num_iter, *args: count < num_iter, gibbs_step, [counter, tf.constant(k), x])
+    [_, _, x_sample] = tf.while_loop(lambda count, num_iter, *args: count < num_iter,
+                                     gibbs_step, [counter, tf.constant(k), x], parallel_iterations=1, back_prop=False)
 
     x_sample = tf.stop_gradient(x_sample)
     return x_sample
