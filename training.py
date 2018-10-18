@@ -15,10 +15,16 @@ def main(epochs):
 
     tvars = [W, Wuh, Wuv, Wvu, Wuu, bh, bv, bu, u0]
 
-    opt_func = tf.train.GradientDescentOptimizer(learning_rate=lr)
-    gvs = opt_func.compute_gradients(cost, tvars)
-    gvs = [(tf.clip_by_value(grad, -10., 10.), var) for grad, var in gvs]
-    update = opt_func.apply_gradients(gvs)
+    #opt_func = tf.train.GradientDescentOptimizer(learning_rate=lr)
+    #gvs = opt_func.compute_gradients(cost, tvars)
+    #gvs = [(tf.clip_by_value(grad, -10., 10.), var) for grad, var in gvs]
+    #update = opt_func.apply_gradients(gvs)
+
+
+    opt_func = tf.train.AdamOptimizer(learning_rate=lr)
+    grads, _ = tf.clip_by_global_norm(tf.gradients(cost, tvars), 1)
+    update = opt_func.apply_gradients(zip(grads, tvars))
+
 
     songs = midi_convert.get_songs('music/midi-songs')
 
